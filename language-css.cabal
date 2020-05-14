@@ -34,7 +34,3 @@ Library
         Language.Css.Build.Tags
         Language.Css.Build.Attributes
         Language.Css.Build.Pseudos
-
-
-----------------------------------------------------------------------------------
-  other-modules:
