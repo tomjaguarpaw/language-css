@@ -1,7 +1,6 @@
-
 -- | Css2.1 syntax
 --
--- haskell translation of css 2.1 grammar. 
+-- haskell translation of css 2.1 grammar.
 --
 -- See <http://www.w3.org/TR/CSS2/grammar.html> and <http://www.w3.org/TR/CSS2/syndata.html>
 module Language.Css.Syntax (
@@ -9,26 +8,26 @@ module Language.Css.Syntax (
         StyleSheet(..), StyleBody(..),
 
         -- * AtRule
-        AtCharSet(..), 
+        AtCharSet(..),
         AtImport(..), ImportHead(..),
-        AtMedia(..), 
+        AtMedia(..),
         AtPage(..), PseudoPage,
         AtFontFace(..),
-        
+
         -- * RuleSet
         RuleSet(..), Decl(..), Prop, Prio(..), Expr(..),
-        
+
         -- * Selectors
         Sel(..), SimpleSel(..), SubSel(..),
         Element, Attr(..), Class, Id, AttrIdent, AttrVal, PseudoVal(..),
 
         -- * Values
-        Value(..), 
-       
+        Value(..),
+
         -- * Primitives
-        Ident(..), Func(..), 
-                
-        Deg(..), 
+        Ident(..), Func(..),
+
+        Deg(..),
         Rad(..),
         Grad(..),
         Color(..),
@@ -61,8 +60,8 @@ data Ident = Ident String
 data StyleSheet = StyleSheet (Maybe AtCharSet) [AtImport] [StyleBody]
                   deriving (Eq, Show)
 
-data StyleBody = SRuleSet    RuleSet 
-               | SAtMedia    AtMedia 
+data StyleBody = SRuleSet    RuleSet
+               | SAtMedia    AtMedia
                | SAtPage     AtPage
                | SAtFontFace AtFontFace
                   deriving (Eq, Show)
@@ -115,26 +114,26 @@ data Prio = Important
 -- Selectors
 
 -- | Selector
-data Sel = SSel SimpleSel    -- ^ single selector	 
-	 | DescendSel Sel Sel    -- ^ ' '
-	 | ChildSel   Sel Sel    -- ^ \'>\'
-	 | AdjSel     Sel Sel    -- ^ \'+\'
+data Sel = SSel SimpleSel    -- ^ single selector
+         | DescendSel Sel Sel    -- ^ ' '
+         | ChildSel   Sel Sel    -- ^ \'>\'
+         | AdjSel     Sel Sel    -- ^ \'+\'
                   deriving (Eq, Show)
 
 -- | Simple selector
 data SimpleSel = UnivSel [SubSel]           -- ^ Universal selector
-    	       | TypeSel Element [SubSel]   -- ^ Type selector
+               | TypeSel Element [SubSel]   -- ^ Type selector
                   deriving (Eq, Show)
 
 
 data SubSel = AttrSel Attr        -- ^ attribute selector
-	    | ClassSel Class          -- ^ \'.\'
-	    | IdSel Id                -- ^ \'#\'
-	    | PseudoSel PseudoVal     -- ^ pseudo classes/elements
+            | ClassSel Class          -- ^ \'.\'
+            | IdSel Id                -- ^ \'#\'
+            | PseudoSel PseudoVal     -- ^ pseudo classes/elements
                   deriving (Eq, Show)
 
 -- | attribute selector
-data Attr = Attr AttrIdent                
+data Attr = Attr AttrIdent
           | AttrIs AttrIdent AttrVal      -- ^ \'=\'
           | AttrIncl AttrIdent AttrVal    -- ^ \'~=\'
           | AttrBegins AttrIdent AttrVal  -- ^ \'|=\'
@@ -143,7 +142,7 @@ data Attr = Attr AttrIdent
 type Element = String
 type Class = String
 type Id = String
-	
+
 type AttrIdent = String
 type AttrVal = String
 
@@ -160,28 +159,28 @@ data Expr = EVal Value            -- ^ single value
           | SpaceSep Expr Expr    -- ^ space separated expressions
                   deriving (Eq, Show)
 
-data Value = VDeg Deg | 
-             VRad Rad | 
-             VGrad Grad | 
-             VColor Color | 
-             VHz Hz | 
-             VKHz KHz | 
-             VFunc Func | 
-             VIdent Ident | 
-             VInt Int | 
-             VEm Em | 
-             VEx Ex | 
-             VPx Px | 
-             VIn In | 
-             VCm Cm | 
-             VMm Mm | 
-             VPc Pc | 
-             VPt Pt | 
-             VDouble Double | 
-             VPercentage Percentage | 
-             VString String | 
-             VMs Ms | 
-             VS S | 
+data Value = VDeg Deg |
+             VRad Rad |
+             VGrad Grad |
+             VColor Color |
+             VHz Hz |
+             VKHz KHz |
+             VFunc Func |
+             VIdent Ident |
+             VInt Int |
+             VEm Em |
+             VEx Ex |
+             VPx Px |
+             VIn In |
+             VCm Cm |
+             VMm Mm |
+             VPc Pc |
+             VPt Pt |
+             VDouble Double |
+             VPercentage Percentage |
+             VString String |
+             VMs Ms |
+             VS S |
              VUri Uri
         deriving (Eq, Show)
 
@@ -201,7 +200,7 @@ data Grad = Grad Double
         deriving (Eq, Show)
 
 -- | \<color\>
-data Color = Cword String | 
+data Color = Cword String |
              Crgb Int Int Int
         deriving (Eq, Show)
 

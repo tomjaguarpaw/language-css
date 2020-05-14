@@ -1,7 +1,7 @@
 {-# LANGUAGE TypeSynonymInstances, FlexibleInstances #-}
 -- | Combinators to build AST
 --
--- Example : 
+-- Example :
 --
 -- >
 -- >import Language.Css.Syntax
@@ -14,17 +14,17 @@
 -- >         body [
 -- >             margin <:> int 0,
 -- >             border <:> int 0 ],
--- >            
+-- >
 -- >         h1 [ textAlign <:> center],
 -- >
--- >         p [ 
--- >            backgroundColor <:> black, 
+-- >         p [
+-- >            backgroundColor <:> black,
 -- >            color <:> white,
 -- >            padding <:> spaces [pct 5, pct 5, pct 10, pct 10]  ],
 -- >
--- >         (star /. "warning") [ color <:> red ] 
+-- >         (star /. "warning") [ color <:> red ]
 -- >       ]
--- > 
+-- >
 -- >main = print $ pretty res
 -- >
 --
@@ -33,7 +33,7 @@ module Language.Css.Build (
        Idents(..), ToExpr(..),
 
        -- * StyleSheet
-       styleSheet, rules, ruleSets, 
+       styleSheet, rules, ruleSets,
        addImports, addRules, charset,
 
        -- * AtRules
@@ -42,12 +42,12 @@ module Language.Css.Build (
        -- * RuleSets
 
        -- ** Selectors
-       Sel', star, sels, 
+       Sel', star, sels,
        (/>), (/-), (/#), (/.), (/:),
        Attrs(..), (!), (.=), (~=), (|=),
-       
+
        -- ** Declarations
-       (<:>), important, 
+       (<:>), important,
        space, slash, comma,
        spaces, slashes, commas,
 
@@ -58,8 +58,8 @@ module Language.Css.Build (
        pct, ms, s, url,
 
        -- * Colors
-       aqua, black, blue, fuchsia, gray, green, 
-       lime, maroon, navy, olive, orange, purple, 
+       aqua, black, blue, fuchsia, gray, green,
+       lime, maroon, navy, olive, orange, purple,
        red, silver, teal, white, yellow
 )
 where
@@ -158,7 +158,7 @@ instance Idents Sel' where
 -- | groups selectors
 sels :: [Sel'] -> Sel'
 sels xs d = joinRules [] $ map ($ d) xs
-    where joinRules sels xs = 
+    where joinRules sels xs =
                 case xs of
                     []   -> RuleSet sels d
                     a:as -> joinRules (sels ++ getSels a) as
@@ -185,7 +185,7 @@ sels xs d = joinRules [] $ map ($ d) xs
 
 -- | set id
 (/#) :: Sel' -> String -> Sel'
-(/#) s id = liftSel1 (appendSubSel $ IdSel id) s 
+(/#) s id = liftSel1 (appendSubSel $ IdSel id) s
 
 -- | set class
 (/.) :: Sel' -> String -> Sel'
@@ -193,10 +193,10 @@ sels xs d = joinRules [] $ map ($ d) xs
 
 -- | set attributes
 (!) :: Sel' -> Attr -> Sel'
-(!) s attr = liftSel1 (appendSubSel $ AttrSel attr) s 
+(!) s attr = liftSel1 (appendSubSel $ AttrSel attr) s
 
 -- | set pseudo classes/elements
-(/:) :: Sel' -> PseudoVal -> Sel' 
+(/:) :: Sel' -> PseudoVal -> Sel'
 (/:) s p = liftSel1 (appendSubSel $ PseudoSel p) s
 
 liftSel1 :: (Sel -> Sel) -> (Sel' -> Sel')
@@ -204,7 +204,7 @@ liftSel1 f = liftA f'
     where f' a = RuleSet (liftA f $ getSels a) $ getDecls a
 
 liftSel2 :: (Sel -> Sel -> Sel) -> (Sel' -> Sel' -> Sel')
-liftSel2 f = liftA2 f' 
+liftSel2 f = liftA2 f'
     where f' a b = RuleSet (liftA2 f (getSels a) (getSels b)) $ getDecls a
 
 
@@ -223,7 +223,7 @@ instance Attrs AttrIdent where
 
 -- | element's attribute is
 (.=) :: AttrIdent -> AttrVal -> Attr
-(.=) = AttrIs 
+(.=) = AttrIs
 
 -- | element's attribute includes
 (~=) :: AttrIdent -> AttrVal -> Attr
@@ -235,17 +235,17 @@ instance Attrs AttrIdent where
 
 
 appendSubSel :: SubSel -> Sel -> Sel
-appendSubSel s a = 
+appendSubSel s a =
     case a of
         SSel x      -> case x of
                             UnivSel xs    -> SSel $ UnivSel $ xs ++ [s]
                             TypeSel el xs -> SSel $ TypeSel el $ xs ++ [s]
         DescendSel x y -> DescendSel (appendSubSel s x) (appendSubSel s y)
         ChildSel   x y -> ChildSel   (appendSubSel s x) (appendSubSel s y)
-        AdjSel     x y -> AdjSel     (appendSubSel s x) (appendSubSel s y)                
+        AdjSel     x y -> AdjSel     (appendSubSel s x) (appendSubSel s y)
 
 
-getSels :: RuleSet -> [Sel] 
+getSels :: RuleSet -> [Sel]
 getSels (RuleSet xs _) = xs
 
 getDecls :: RuleSet -> [Decl]
@@ -262,8 +262,8 @@ instance Idents PseudoVal where
 (<:>) :: String -> Expr -> Decl
 (<:>) a b = Decl Nothing (ident a) b
 
--- | set @!important@ 
-important :: Decl -> Decl 
+-- | set @!important@
+important :: Decl -> Decl
 important (Decl _ a b) = Decl (Just Important) a b
 
 -- | space separated values
@@ -305,7 +305,7 @@ instance Idents Expr where
 instance Idents Value where
     ident = VIdent . ident
 
-instance ToExpr Value where 
+instance ToExpr Value where
     expr = EVal
 
 -----------------------------------------------------------------
@@ -316,87 +316,87 @@ instance ToExpr Value where
 fun :: ToExpr a => Ident -> a -> Func
 fun str = Func str . expr
 
--- | \<angle\> 
+-- | \<angle\>
 deg :: Double -> Expr
 deg = expr . Deg
 
--- | \<angle\> 
+-- | \<angle\>
 rad :: Double -> Expr
 rad = expr . Rad
 
--- | \<angle\> 
+-- | \<angle\>
 grad :: Double -> Expr
 grad = expr . Grad
 
--- | \<color\> 
+-- | \<color\>
 cword :: String -> Expr
 cword = expr . Cword . checkWord
 
--- | \<color\> 
+-- | \<color\>
 rgb :: Int -> Int -> Int -> Expr
 rgb x0 x1 x2 = expr $ Crgb x0 x1 x2
 
--- | \<frequency\> 
+-- | \<frequency\>
 hz :: Double -> Expr
 hz = expr . Hz
 
--- | \<frequency\> 
+-- | \<frequency\>
 khz :: Double -> Expr
 khz = expr . KHz
 
--- | \<length\> 
+-- | \<length\>
 em :: Double -> Expr
 em = expr . Em
 
--- | \<length\> 
+-- | \<length\>
 ex :: Double -> Expr
 ex = expr . Ex
 
--- | \<length\> 
+-- | \<length\>
 px :: Int -> Expr
 px = expr . Px
 
--- | \<length\> 
+-- | \<length\>
 in' :: Double -> Expr
 in' = expr . In
 
--- | \<length\> 
+-- | \<length\>
 cm :: Double -> Expr
 cm = expr . Cm
 
--- | \<length\> 
+-- | \<length\>
 mm :: Double -> Expr
 mm = expr . Mm
 
--- | \<length\> 
+-- | \<length\>
 pc :: Double -> Expr
 pc = expr . Pc
 
--- | \<length\> 
+-- | \<length\>
 pt :: Int -> Expr
 pt = expr . Pt
 
--- | \<percentage\> 
+-- | \<percentage\>
 pct :: Double -> Expr
 pct = expr . Percentage
 
--- | \<time\> 
+-- | \<time\>
 ms :: Double -> Expr
 ms = expr . Ms
 
--- | \<time\> 
+-- | \<time\>
 s :: Double -> Expr
 s = expr . S
 
--- | \<uri\> 
+-- | \<uri\>
 url :: String -> Expr
 url = expr . Uri
 
-checkWord x 
+checkWord x
     | checkLeng x && checkNums x && checkFirst x = x
-    | otherwise                                  = errorMsg 
-    where errorMsg = error "must be number in hexadecimal notation" 
-          checkLeng x 
+    | otherwise                                  = errorMsg
+    where errorMsg = error "must be number in hexadecimal notation"
+          checkLeng x
             | length x == 4 || length x == 7 = True
             | otherwise = error "string length must be 4 or 7"
           checkNums x
@@ -404,7 +404,7 @@ checkWord x
             | otherwise = errorMsg
           checkFirst x
             | '#' == head x = True
-            | otherwise = error "first character must be #"        
+            | otherwise = error "first character must be #"
 
 
 
@@ -414,7 +414,7 @@ str = expr . VString
 int :: Int -> Expr
 int = expr
 
-num :: Double -> Expr 
+num :: Double -> Expr
 num = expr
 
 -- instances
@@ -489,22 +489,20 @@ instance ToExpr Uri where
 
 -- colors
 --
-aqua    = cword "#00ffff" 
+aqua    = cword "#00ffff"
 black   = cword "#000000"
-blue    = cword "#0000ff" 
-fuchsia = cword "#ff00ff" 
-gray    = cword "#808080"  
-green   = cword "#008000" 
-lime    = cword "#00ff00"  
-maroon  = cword "#800000"  
-navy    = cword "#000080" 
-olive   = cword "#808000" 
-orange  = cword "#ffA500" 
-purple  = cword "#800080" 
-red     = cword "#ff0000"  
-silver  = cword "#c0c0c0" 
-teal    = cword "#008080" 
-white   = cword "#ffffff" 
+blue    = cword "#0000ff"
+fuchsia = cword "#ff00ff"
+gray    = cword "#808080"
+green   = cword "#008000"
+lime    = cword "#00ff00"
+maroon  = cword "#800000"
+navy    = cword "#000080"
+olive   = cword "#808000"
+orange  = cword "#ffA500"
+purple  = cword "#800080"
+red     = cword "#ff0000"
+silver  = cword "#c0c0c0"
+teal    = cword "#008080"
+white   = cword "#ffffff"
 yellow  = cword "#ffff00"
-
-

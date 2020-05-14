@@ -13,11 +13,11 @@ module Language.Css.Build.Pseudos (
         firstLetter,
         before,
         after
-) 
+)
 where
 
 import Language.Css.Syntax
-import Language.Css.Build  
+import Language.Css.Build
 
 -- pseudo-classes
 
@@ -25,7 +25,7 @@ import Language.Css.Build
 firstChild :: PseudoVal
 firstChild = ident "first-child"
 
--- | :link 
+-- | :link
 link :: PseudoVal
 link = ident "link"
 
@@ -45,7 +45,7 @@ active = ident "active"
 focus :: PseudoVal
 focus = ident "focus"
 
--- | :lang  
+-- | :lang
 lang :: Expr -> PseudoVal
 lang = PFunc . fun (ident "lang")
 
@@ -55,15 +55,14 @@ lang = PFunc . fun (ident "lang")
 firstLine :: PseudoVal
 firstLine = ident "first-line"
 
--- | :first-letter 
+-- | :first-letter
 firstLetter :: PseudoVal
 firstLetter = ident "first-letter"
 
--- | :before 
+-- | :before
 before :: PseudoVal
 before = ident "before"
 
--- | :after 
+-- | :after
 after :: PseudoVal
 after = ident "after"
-

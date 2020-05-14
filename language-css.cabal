@@ -14,7 +14,7 @@ Maintainer:    <anton.kholomiov@gmail.com>
 
 Library
   Build-Depends:
-        base >= 4, base < 5, pretty  
+        base >= 4, base < 5, pretty
   Hs-Source-Dirs:      src/
   Exposed-Modules:
         Language.Css.Syntax
@@ -26,9 +26,5 @@ Library
         Language.Css.Build.Pseudos
 
 
----------------------------------------------------------------------------------- 		
+----------------------------------------------------------------------------------
   Other-Modules:
-
-
-
-
